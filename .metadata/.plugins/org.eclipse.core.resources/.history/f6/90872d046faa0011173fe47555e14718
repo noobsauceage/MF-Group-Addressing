@@ -1,0 +1,5 @@
+package com.daft.sqlclient;
+
+public class SQLUpdate {
+
+}
