@@ -1,5 +1,7 @@
 package com.daft.sqlclient;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -20,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class ClientActivity extends Activity {
     /** Called when the activity is first created. */
@@ -28,23 +31,39 @@ public class ClientActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        Button testButton = (Button)findViewById(R.id.button1);
-        testButton.setOnClickListener(testOnClickListener);
+        Button sendButton = (Button)findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(sendOnClickListener);
+    }
+    
+    public void getFile() {
+    	FileInputStream is = null;
+    	BufferedReader reader = null;
+    	
+    	try {
+    		String line;
+    		while ((line = reader.readLine()) != null) {
+    			String[] RowData = line.split(",");
+                String name = RowData[0];
+                String value = RowData[1];
+    		}
+    	}
     }
     
     public class SQLUpdate extends AsyncTask<Void,Void,Void> {
 
     	@Override
     	protected Void doInBackground(Void... params) {
-    		postData(findViewById(R.id.button1));
+    		postData(findViewById(R.id.sendButton));
 			return null;
     	}
 
     	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
+    	final EditText nameBox = (EditText) findViewById(R.id.nameBox);
+    	final EditText valueBox = (EditText) findViewById(R.id.valueBox);
+    	
     	public void postData(View v) {
-    		nameValuePairs.add(new BasicNameValuePair("name","J"));
-    		nameValuePairs.add(new BasicNameValuePair("value","2"));
+    		nameValuePairs.add(new BasicNameValuePair("name",nameBox.getText().toString()));
+    		nameValuePairs.add(new BasicNameValuePair("value",valueBox.getText().toString()));
 
     		//HTTP post
     		try {
@@ -69,7 +88,7 @@ public class ClientActivity extends Activity {
     	}
     }
     
-    Button.OnClickListener testOnClickListener = new Button.OnClickListener(){
+    Button.OnClickListener sendOnClickListener = new Button.OnClickListener(){
     	public void onClick(View v) {
     		new SQLUpdate().execute();
     	}
