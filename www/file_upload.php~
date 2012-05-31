@@ -1,0 +1,57 @@
+<?php
+$con = mysql_connect("localhost","root","goobypls");
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }
+
+mysql_select_db("test", $con);
+
+$sql="INSERT INTO jason (Timestamp, X, Y, Z)
+VALUES
+('$_POST[firstname]','$_POST[lastname]','$_POST[age]')";
+
+if (!mysql_query($sql,$con))
+  {
+  die('Error: ' . mysql_error());
+  }
+echo "1 record added";
+
+mysql_close($con);
+
+
+function csv_file_to_mysql_table($source_file, $target_table, $max_line_length=10000) { 
+    if (($handle = fopen("$source_file", "r")) !== FALSE) { 
+        $columns = fgetcsv($handle, $max_line_length, ","); 
+        foreach ($columns as &$column) { 
+            $column = str_replace(".","",$column); 
+        } 
+        $insert_query_prefix = "INSERT INTO $target_table (".join(",",$columns).")\nVALUES"; 
+        while (($data = fgetcsv($handle, $max_line_length, ",")) !== FALSE) { 
+            while (count($data)<count($columns)) 
+                array_push($data, NULL); 
+            $query = "$insert_query_prefix (".join(",",quote_all_array($data)).");"; 
+            mysql_query($query); 
+        } 
+        fclose($handle); 
+    } 
+} 
+
+function quote_all_array($values) { 
+    foreach ($values as $key=>$value) 
+        if (is_array($value)) 
+            $values[$key] = quote_all_array($value); 
+        else 
+            $values[$key] = quote_all($value); 
+    return $values; 
+} 
+
+function quote_all($value) { 
+    if (is_null($value)) 
+        return "NULL"; 
+
+    $value = "'" . mysql_real_escape_string($value) . "'"; 
+    return $value; 
+} 
+
+?>
