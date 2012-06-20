@@ -1,0 +1,10 @@
+package com.daft.clicker;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+public class ClickerActivity extends Activity {
+// communicate with php scripts on server to handle question/answer mechanics
+	}
+
+}
